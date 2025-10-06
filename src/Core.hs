@@ -178,3 +178,16 @@ odds = 1 : map (+ 1) evens
 evens = map (+ 1) odds
 
 fibs = 1 : 1 : zipWith (+) fibs (tail fibs)
+
+-- inflow t = if t < 4 then 0 else (min 5 ((t-4)*5))
+inflow t
+  | t < 4 = 0
+  | t >= 5 = 5
+  | otherwise = (t-4)*5
+outflow t = 5
+--waterInTub :: (Fractional g, Fractional f, Ord f) => g -> f -> f
+waterInTub step t
+  | t <= 0 = 50
+--waterInTub t = waterInTub(t-1) + inflow(t) - outflow(t) -- the good one
+-- very important that the call to waterInTub NOT have parentheses
+  | otherwise = (waterInTub step t-step) + step * (inflow t - outflow t)
