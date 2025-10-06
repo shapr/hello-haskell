@@ -42,6 +42,7 @@ common common-opts
     , text
     , foldl
     , safe-exceptions
+    , granite
 
   default-language: Haskell2010
 
