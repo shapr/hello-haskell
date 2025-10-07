@@ -22,7 +22,7 @@ main = do
 
 waterInTubChart = [("Water in Tub", [(x, waterInTub' 1 x) | x <- [0 .. 10]])]
 
-coffeeChart n =
+coffeeChart n = 
     let coffee = coffeeLine 10
      in [ coffee 100
         , coffee 80
@@ -34,7 +34,7 @@ coffeeChart n =
         ]
 
 -- steps, starting temp
-coffeeLine n startTemp = ("Temp from " <> T.pack (show n), zip [0 .. n] (iterate (coffeeTemp 18 0.1) startTemp))
+coffeeLine n startTemp = ("Temp from " <> T.pack (show startTemp), zip [0 .. n] (iterate (coffeeTemp 18 0.1) startTemp))
 
 -- params are title, width, and height
 -- origin is forced to 0,0 for both x and y axis
