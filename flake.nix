@@ -3,7 +3,7 @@
 
   inputs = {
     # Nix Inputs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
   outputs = {
@@ -29,7 +29,7 @@
           # };
           hsPkgs = pkgs.haskell.packages.${compilerVersion}.override {
             overrides = hfinal: hprev: {
-              granite = pkgs.haskell.lib.dontCheck (self.callHackage "granite" "0.3.0.4" {});
+              granite = pkgs.haskell.lib.dontCheck (hfinal.callHackage "granite" "0.3.0.0" {});
 
               hello-haskell = hfinal.callCabal2nix "hello-haskell" ./. {};
             };

@@ -16,13 +16,15 @@ import System.Environment
 main :: IO ()
 main = do
     (Just (Window{height = h, width = w})) <- size
-    TIO.putStrLn $ lineGraph (coffeeChart 10) (defP "Coffee Temp" w h)
+    TIO.putStrLn $ lineGraph (bankChart 10) (defP "Account Balance" w h)
+
+-- lineGraph (coffeeChart 10) (defP "Coffee Temp" w h)
 
 -- T.putStrLn $ lineGraph waterInTubChart (defP "Water In Tub" w h)
 
 waterInTubChart = [("Water in Tub", [(x, waterInTub' 1 x) | x <- [0 .. 10]])]
 
-coffeeChart n = 
+coffeeChart n =
     let coffee = coffeeLine 10
      in [ coffee 100
         , coffee 80

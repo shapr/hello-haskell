@@ -1,6 +1,10 @@
 {-# LANGUAGE GADTSyntax #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Core where
+
+import qualified Data.Text as T
+import Prelude
 
 {-
 multi line comment starts the demo code
@@ -206,4 +210,12 @@ coffeeTemp roomTemp percentCool currentTemp = currentTemp - (discrepancy * perce
   where
     discrepancy = currentTemp - roomTemp -- assumes coffee is warmer, how to generalize?
 
--- bankBalance
+-- bankBalance, one step
+bankAccount interest money = money + (money * interest)
+
+-- steps, money, interest
+bankLine steps startMoney interest = ("Balance starting from " <> T.pack (show startMoney) <> " at " <> T.pack (show interest) <> "% interest", zip [0 .. steps] (iterate (bankAccount interest) startMoney))
+
+bankChart steps =
+    let bline = bankLine steps 100
+     in [bline 0.1, bline 0.08, bline 0.06, bline 0.04, bline 0.02]
