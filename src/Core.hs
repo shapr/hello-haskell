@@ -181,13 +181,22 @@ fibs = 1 : 1 : zipWith (+) fibs (tail fibs)
 
 -- inflow t = if t < 4 then 0 else (min 5 ((t-4)*5))
 inflow t
-  | t < 4 = 0
-  | t >= 5 = 5
-  | otherwise = (t-4)*5
+    | t < 4 = 0
+    | t >= 5 = 5
+    | otherwise = (t - 4) * 5
 outflow t = 5
---waterInTub :: (Fractional g, Fractional f, Ord f) => g -> f -> f
+
+waterInTub :: (Num f, Ord f) => f -> f -> f
 waterInTub step t
-  | t <= 0 = 50
---waterInTub t = waterInTub(t-1) + inflow(t) - outflow(t) -- the good one
--- very important that the call to waterInTub NOT have parentheses
-  | otherwise = (waterInTub step t-step) + step * (inflow t - outflow t)
+    | t <= 0 = 50
+    -- waterInTub t = waterInTub(t-1) + inflow(t) - outflow(t) -- the good one
+    -- very important that the call to waterInTub NOT have parentheses
+    | otherwise = wah + step * (inflow t - outflow t)
+  where
+    -- why does this compile? I'm confused about the type it thinks it is?!
+    -- shouldn't this waterInTub unify with the one above? but it doesn't?
+    wah = waterInTub step t - step
+
+-- waterInTub' :: Int -> Int -> Int
+waterInTub' _ 0 = 50
+waterInTub' s t = waterInTub' s (t - s) + s * (inflow t - outflow t)
