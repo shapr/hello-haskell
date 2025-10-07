@@ -11,15 +11,15 @@ import Text.Read (readMaybe)
 
 main :: IO ()
 main = do
-  mText <- lookupEnv "TEST_CONCURRENCY"
-  let
-    maxResources :: Int
-    maxResources = fromMaybe 8 (mText >>= readMaybe)
-  let
-    cfg =
-      useFormatter
-        ("specdoc", specdoc)
-        TR.defaultConfig
-          { configConcurrentJobs = Just maxResources
-          }
-  hspecWith cfg (parallel Spec.spec)
+    mText <- lookupEnv "TEST_CONCURRENCY"
+    let
+        maxResources :: Int
+        maxResources = fromMaybe 8 (mText >>= readMaybe)
+    let
+        cfg =
+            useFormatter
+                ("specdoc", specdoc)
+                TR.defaultConfig
+                    { configConcurrentJobs = Just maxResources
+                    }
+    hspecWith cfg (parallel Spec.spec)

@@ -200,3 +200,10 @@ waterInTub step t
 -- waterInTub' :: Int -> Int -> Int
 waterInTub' _ 0 = 50
 waterInTub' s t = waterInTub' s (t - s) + s * (inflow t - outflow t)
+
+-- this function calculates one single step, is this a reasonable interface?
+coffeeTemp roomTemp percentCool currentTemp = currentTemp - (discrepancy * percentCool)
+  where
+    discrepancy = currentTemp - roomTemp -- assumes coffee is warmer, how to generalize?
+
+-- bankBalance
