@@ -8,6 +8,7 @@ import Data.List
 import qualified Data.Text as T
 import qualified Data.Text.IO as TIO
 import Granite
+import TextShow
 import Prelude
 
 import System.Console.Terminal.Size
@@ -16,9 +17,9 @@ import System.Environment
 main :: IO ()
 main = do
     (Just (Window{height = h, width = w})) <- size
-    TIO.putStrLn $ lineGraph (bankChart 10) (defP "Account Balance" w h)
+    -- TIO.putStrLn $ lineGraph (bankChart 10) (defP "Account Balance" w h)
 
--- lineGraph (coffeeChart 10) (defP "Coffee Temp" w h)
+    TIO.putStrLn $ lineGraph (coffeeChart 10) (defP "Coffee Temp" w h)
 
 -- T.putStrLn $ lineGraph waterInTubChart (defP "Water In Tub" w h)
 
@@ -36,7 +37,7 @@ coffeeChart n =
         ]
 
 -- steps, starting temp
-coffeeLine n startTemp = ("Temp from " <> T.pack (show startTemp), zip [0 .. n] (iterate (coffeeTemp 18 0.1) startTemp))
+coffeeLine n startTemp = ("Temp from " <> showt startTemp, zip [0 .. n] (iterate (coffeeTemp 18 0.1) startTemp))
 
 -- params are title, width, and height
 -- origin is forced to 0,0 for both x and y axis

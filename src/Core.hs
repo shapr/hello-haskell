@@ -4,6 +4,7 @@
 module Core where
 
 import qualified Data.Text as T
+import TextShow
 import Prelude
 
 {-
@@ -214,7 +215,7 @@ coffeeTemp roomTemp percentCool currentTemp = currentTemp - (discrepancy * perce
 bankAccount interest money = money + (money * interest)
 
 -- steps, money, interest
-bankLine steps startMoney interest = ("Balance starting from " <> T.pack (show startMoney) <> " at " <> T.pack (show interest) <> "% interest", zip [0 .. steps] (iterate (bankAccount interest) startMoney))
+bankLine steps startMoney interest = ("Balance starting from " <> showt startMoney <> " at " <> showt interest <> "% interest", zip [0 .. steps] (iterate (bankAccount interest) startMoney))
 
 bankChart steps =
     let bline = bankLine steps 100

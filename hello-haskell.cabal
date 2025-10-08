@@ -40,6 +40,7 @@ common common-opts
 
     -- Utilities
     , text
+    , text-show
     , foldl
     , safe-exceptions
     , granite
