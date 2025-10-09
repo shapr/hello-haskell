@@ -3,13 +3,13 @@
 
   inputs = {
     # Nix Inputs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
   outputs = {
     self,
     nixpkgs,
-  }: 
+  }:
     let
       forAllSystems = function:
         nixpkgs.lib.genAttrs [
@@ -21,8 +21,16 @@
           inherit system;
           compilerVersion = "ghc984";
           pkgs = nixpkgs.legacyPackages.${system};
+          # pkgs = import nixpkgs {
+          #   inherit system;
+          #   config = {
+          #     allowBroken = true;
+          #   };
+          # };
           hsPkgs = pkgs.haskell.packages.${compilerVersion}.override {
             overrides = hfinal: hprev: {
+              granite = pkgs.haskell.lib.dontCheck (hfinal.callHackage "granite" "0.3.0.0" {});
+
               hello-haskell = hfinal.callCabal2nix "hello-haskell" ./. {};
             };
           };
@@ -62,9 +70,9 @@
 
       # nix run
       apps = forAllSystems ({system, ...}: {
-        hello-haskell = { 
-          type = "app"; 
-          program = "${self.packages.${system}.hello-haskell}/bin/hello-haskell"; 
+        hello-haskell = {
+          type = "app";
+          program = "${self.packages.${system}.hello-haskell}/bin/hello-haskell";
         };
         default = self.apps.${system}.hello-haskell;
       });

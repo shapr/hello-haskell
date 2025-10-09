@@ -1,6 +1,11 @@
 {-# LANGUAGE GADTSyntax #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Core where
+
+import qualified Data.Text as T
+import TextShow
+import Prelude
 
 {-
 multi line comment starts the demo code
@@ -178,3 +183,78 @@ odds = 1 : map (+ 1) evens
 evens = map (+ 1) odds
 
 fibs = 1 : 1 : zipWith (+) fibs (tail fibs)
+
+-- inflow t = if t < 4 then 0 else (min 5 ((t-4)*5))
+inflow t
+    | t < 4 = 0
+    | t >= 5 = 5
+    | otherwise = (t - 4) * 5
+outflow t = 5
+
+waterInTub :: (Num f, Ord f) => f -> f -> f
+waterInTub step t
+    | t <= 0 = 50
+    -- waterInTub t = waterInTub(t-1) + inflow(t) - outflow(t) -- the good one
+    -- very important that the call to waterInTub NOT have parentheses
+    | otherwise = wah + step * (inflow t - outflow t)
+  where
+    -- why does this compile? I'm confused about the type it thinks it is?!
+    -- shouldn't this waterInTub unify with the one above? but it doesn't?
+    wah = waterInTub step t - step
+
+-- waterInTub' :: Int -> Int -> Int
+waterInTub' _ 0 = 50
+waterInTub' s t = waterInTub' s (t - s) + s * (inflow t - outflow t)
+
+waterInTubChart = [("Water in Tub", [(x, waterInTub' 1 x) | x <- [0 .. 10]])]
+
+-- this function calculates one single step, is this a reasonable interface?
+coffeeTemp roomTemp percentCool currentTemp = currentTemp - (discrepancy * percentCool)
+  where
+    discrepancy = currentTemp - roomTemp -- assumes coffee is warmer, how to generalize?
+
+-- bankBalance, one step
+bankAccount interest money = money + (money * interest)
+
+-- steps, money, interest
+bankLine steps startMoney interest = ("Balance starting from " <> showt startMoney <> " at " <> showt interest <> "% interest", zip [0 .. steps] (iterate (bankAccount interest) startMoney))
+
+bankChart steps =
+    let bline = bankLine steps 100
+     in [bline 0.1, bline 0.08, bline 0.06, bline 0.04, bline 0.02]
+
+insideTemp roomTemp heatIn heatOut = roomTemp + diff
+  where
+    diff = heatIn - heatOut
+
+coffeeChart n =
+    let coffee = coffeeLine 10
+     in [ ("Room Temp", zip [0 .. n] $ repeat 18)
+        , coffee 100
+        , coffee 80
+        , coffee 60
+        , coffee 40
+        , coffee 10
+        , coffee 5
+        , coffee 0
+        ]
+
+-- steps, starting temp
+coffeeLine n startTemp = ("Temp from " <> showt startTemp, zip [0 .. n] (iterate (coffeeTemp 18 0.1) startTemp))
+
+outsideTemp :: [Double]
+outsideTemp = [7.5 * cos x + 2.5 | x <- [0, 0.27 .. 6.2]]
+
+-- furnace can heat house five degrees per hour,
+furnace desired current = min 5 (desired - current)
+
+heating :: Double -> Double -> Double -> Double -> Double
+heating desired roomTemp lossy hour = roomTemp - heatLoss
+  where
+    heatLoss = (furnace desired roomTemp - (cycle outsideTemp !! floor hour)) * lossy
+
+heatingLine :: Double -> (T.Text, [(Double, Double)])
+heatingLine loss = ("Goal of 18, " <> showt loss <> " loss", [(x, heating 18 18 loss x) | x <- [0 .. 24]])
+
+heatingChart :: [(T.Text, [(Double, Double)])]
+heatingChart = [heatingLine 0.1, heatingLine 0.3, ("Outside temp", zip [0 .. 24] outsideTemp), ("Thermostat setting", zip [0 .. 24] $ repeat 18)]

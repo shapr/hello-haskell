@@ -40,9 +40,11 @@ common common-opts
 
     -- Utilities
     , text
+    , text-show
     , foldl
     , safe-exceptions
     , granite
+    , terminal-size
 
   default-language: Haskell2010
 
@@ -81,6 +83,7 @@ test-suite hello-haskell-tests
     , hello-haskell
     , hedgehog
     , hspec
+    , hspec-api
     , hspec-core
     , hspec-discover
     , hspec-expectations
